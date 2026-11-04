@@ -1,54 +1,49 @@
-# React + TypeScript + Vite
+# Dah Qada?
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small mobile-friendly web app for keeping track of missed (qada) prayers. You log which prayer was missed and when, then mark entries as done as you make them up. The UI is in Malay.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Nickname prompt on first visit, stored in the browser (`localStorage`).
+- Home screen with today's prayer times fetched from the e-Solat (JAKIM) API, with a selectable state and zone.
+- Zikir counter, persisted in `localStorage`.
+- Add a qada entry: date, prayer (subuh, zohor, asar, maghrib, isyak) and an optional reason.
+- View the list of entries, mark them as done, or delete them.
+- Qada entries are stored locally in the browser with IndexedDB (via Dexie). There is no backend.
 
-## Expanding the ESLint configuration
+The Profile page is currently a placeholder with static sample data.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech stack
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- React 19, TypeScript, Vite
+- Material UI (MUI) and Emotion, react-icons
+- React Router
+- Dexie (IndexedDB), axios, moment
+
+## Getting started
+
+```bash
+npm install     # or: yarn
+npm run dev     # start the dev server
+npm run build   # type-check and build
+npm run lint
+npm run preview # serve the production build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+No environment variables are required. Prayer times are requested from `https://www.e-solat.gov.my`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Project structure
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
 ```
+src/
+  main.tsx, App.tsx        entry point and routing
+  config/routes.ts         route table (/, /add-list, /view-list, /profile)
+  pages/                   Home (prayer times, zikir), AddList, ViewList, Profile, NotFound
+  components/layout/       app bar and layout
+  contexts/                notification context
+  db/index.ts              Dexie database (qadaSalah table)
+  constants/               prayer list, states, JAKIM zone codes
+  theme/                   MUI theme
+```
+
+The repository also contains older copies of these files at the top level; the app is built from `src/`.
